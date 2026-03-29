@@ -169,6 +169,9 @@ mls::PromptProcessingResult processMultimodalPrompt(const std::string& prompt_te
 
 void LlmSession::Reset() {
     history_.resize(1);
+    if (llm_) {
+        llm_->reset();
+    }
 }
 
 LlmSession::LlmSession(std::string model_path, json config, json extra_config, std::vector<std::string> history):
@@ -558,6 +561,9 @@ void LlmSession::clearHistory(int numToKeep) {
     // 清空相关缓存
     prompt_string_for_debug.clear();
     //response_string_for_debug.clear();
+    if (llm_) {
+        llm_->reset();
+    }
 }
 
 std::string LlmSession::getSystemPrompt() const {
