@@ -106,6 +106,12 @@ class SettingsBottomSheetFragment : BaseSettingsBottomSheetFragment() {
         binding.mmapSettingsItem.setOnCheckedChangeListener { _, isChecked ->
             currentConfig.useMmap = isChecked
         }
+        // Prompt cache toggle
+        binding.promptCacheToggle.isChecked = currentConfig.promptCache ?: true
+        binding.promptCacheToggle.setOnCheckedChangeListener { _, isChecked ->
+            currentConfig.promptCache = isChecked
+        }
+
         binding.buttonClearMmapCache.setOnClickListener {
             val success = MmapUtils.clearMmapCache(modelId)
             if (success) {
@@ -541,6 +547,11 @@ class SettingsBottomSheetFragment : BaseSettingsBottomSheetFragment() {
         } else if (currentConfig.systemPrompt != loadedConfig.systemPrompt) {
             needSaveConfig = true
             chatSession?.updateSystemPrompt(currentConfig.systemPrompt!!)
+            needRecreate = false
+        } else if (currentConfig.promptCache != loadedConfig.promptCache) {
+            needSaveConfig = true
+            val llmSession = chatSession as? com.alibaba.mnnllm.android.llm.LlmSession
+            llmSession?.updateConfig("""{"prompt_cache": ${currentConfig.promptCache ?: true}}""")
             needRecreate = false
         } else if (currentConfig.useMmap != loadedConfig.useMmap) {
             needSaveConfig = true

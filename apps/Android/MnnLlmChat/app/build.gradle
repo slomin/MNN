@@ -172,6 +172,7 @@ android {
         // Exclude large model files from compression
         jniLibs {
             useLegacyPackaging = true
+            pickFirsts += ['lib/arm64-v8a/libMNN.so', 'lib/arm64-v8a/libMNN_Express.so', 'lib/arm64-v8a/libllm.so']
         }
     }
 
